@@ -1,0 +1,11 @@
+.vscode/
+
+*.csv
+
+*.zip
+
+*.xls
+*.xlsx
+*.xlsm
+*.xlsb
+*.pdf

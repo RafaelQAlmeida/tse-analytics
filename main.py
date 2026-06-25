@@ -1,0 +1,32 @@
+# %%
+
+import pandas as pd
+
+import requests
+
+class DownloadTSE:
+
+    def __init__(self):
+            pass
+        #teste
+
+    def download_consulta_candidatura(self, ano:int):
+            
+        url = f'https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_{ano}.zip'
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            with open(f'consulta_cand_{ano}.zip', 'wb') as f:
+                f.write(response.content)
+            print(f'Arquivo consulta_cand_{ano}.zip baixado com sucesso.')
+            return True
+
+        print(f'Falha ao baixar o arquivo consulta_cand_{ano}.zip. Status code: {response.status_code}')
+        return False
+
+# %%
+
+downloader = DownloadTSE()
+downloader.download_consulta_candidatura(2024)
+
+# %%
