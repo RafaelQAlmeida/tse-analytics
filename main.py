@@ -1,22 +1,25 @@
 # %%
 
 import pandas as pd
-
 import requests
+import os
+
+DATA_PATH = './data'
 
 class DownloadTSE:
 
     def __init__(self):
-        pass
-        
+        if not os.path.exists(DATA_PATH):
+            os.makedirs(DATA_PATH)
 
-    def download_consulta_candidatura(self, ano:int):
-            
+    def download_consulta_candidatura(self, ano:int, base_path:str = DATA_PATH):
+
         url = f'https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_{ano}.zip'
         response = requests.get(url)
 
         if response.status_code == 200:
-            with open(f'consulta_cand_{ano}.zip', 'wb') as f:
+            path = os.path.join(base_path, f'consulta_cand_{ano}.zip')
+            with open(path, 'wb') as f:
                 f.write(response.content)
             print(f'Arquivo consulta_cand_{ano}.zip baixado com sucesso.')
             return True
@@ -24,13 +27,14 @@ class DownloadTSE:
         print(f'Falha ao baixar o arquivo consulta_cand_{ano}.zip. Status code: {response.status_code}')
         return False
 
-    def download_bens_candidatos(self, ano:int):
-            
+    def download_bens_candidatos(self, ano:int, base_path:str = DATA_PATH):
+        
         url = f'https://cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_{ano}.zip'
         response = requests.get(url)
 
         if response.status_code == 200:
-            with open(f'bem_candidato_{ano}.zip', 'wb') as f:
+            path = os.path.join(base_path, f'bem_candidato_{ano}.zip')
+            with open(path, 'wb') as f:
                 f.write(response.content)
             print(f'Arquivo bem_candidato_{ano}.zip baixado com sucesso.')
             return True
@@ -38,13 +42,14 @@ class DownloadTSE:
         print(f'Falha ao baixar o arquivo bem_candidato_{ano}.zip. Status code: {response.status_code}')
         return False
     
-    def download_coligacoes(self, ano:int):
+    def download_coligacoes(self, ano:int, base_path:str = DATA_PATH):
             
         url = f'https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_coligacao/consulta_coligacao_{ano}.zip'
         response = requests.get(url)
 
         if response.status_code == 200:
-            with open(f'consulta_coligacao_{ano}.zip', 'wb') as f:
+            path = os.path.join(base_path, f'consulta_coligacao_{ano}.zip')
+            with open(path, 'wb') as f:
                 f.write(response.content)
             print(f'Arquivo consulta_coligacao_{ano}.zip baixado com sucesso.')
             return True
@@ -52,13 +57,14 @@ class DownloadTSE:
         print(f'Falha ao baixar o arquivo consulta_coligacao_{ano}.zip. Status code: {response.status_code}')
         return False
     
-    def download_motivo_cassacao(self, ano:int):
+    def download_motivo_cassacao(self, ano:int, base_path:str = DATA_PATH):
             
         url = f'https://cdn.tse.jus.br/estatistica/sead/odsele/motivo_cassacao/motivo_cassacao_{ano}.zip'
         response = requests.get(url)
 
         if response.status_code == 200:
-            with open(f'motivo_cassacao_{ano}.zip', 'wb') as f:
+            path = os.path.join(base_path, f'motivo_cassacao_{ano}.zip')
+            with open(path, 'wb') as f:
                 f.write(response.content)
             print(f'Arquivo motivo_cassacao_{ano}.zip baixado com sucesso.')
             return True
@@ -66,13 +72,14 @@ class DownloadTSE:
         print(f'Falha ao baixar o arquivo motivo_cassacao_{ano}.zip. Status code: {response.status_code}')
         return False
 
-    def download_votacao_candidato_municipio_zona(self, ano:int):
+    def download_votacao_candidato_municipio_zona(self, ano:int, base_path:str = DATA_PATH):
             
         url = f'https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_{ano}.zip'
         response = requests.get(url)
 
         if response.status_code == 200:
-            with open(f'votacao_candidato_munzona_{ano}.zip', 'wb') as f:
+            path = os.path.join(base_path, f'votacao_candidato_munzona_{ano}.zip')
+            with open(path, 'wb') as f:
                 f.write(response.content)
             print(f'Arquivo votacao_candidato_munzona_{ano}.zip baixado com sucesso.')
             return True
@@ -80,21 +87,21 @@ class DownloadTSE:
         print(f'Falha ao baixar o arquivo votacao_candidato_munzona_{ano}.zip. Status code: {response.status_code}')
         return False
 
+    def download_ano(self, ano:int):
+
+        # Verifica se o diretório de dados existe, caso não exista cria
+        if not os.path.exists(os.path.join(DATA_PATH, str(ano))):
+            os.makedirs(os.path.join(DATA_PATH, str(ano)))
+
+        self.download_consulta_candidatura(ano, os.path.join(DATA_PATH, str(ano)))
+        self.download_bens_candidatos(ano, os.path.join(DATA_PATH, str(ano)))
+        self.download_coligacoes(ano, os.path.join(DATA_PATH, str(ano)))
+        self.download_motivo_cassacao(ano, os.path.join(DATA_PATH, str(ano)))
+        self.download_votacao_candidato_municipio_zona(ano, os.path.join(DATA_PATH, str(ano)))
+
 # %%
 
-# downloader = DownloadTSE()
-# downloader.download_consulta_candidatura(2024)
-
-# downloader = DownloadTSE()
-# downloader.download_bens_candidatos(2024)
-
-# downloader = DownloadTSE()
-# downloader.download_coligacoes(2024)
-
-# downloader = DownloadTSE()
-# downloader.download_motivo_cassacao(2024)
-
 downloader = DownloadTSE()
-downloader.download_votacao_candidato_municipio_zona(2024)
+downloader.download_ano(2024)
 
 # %%
